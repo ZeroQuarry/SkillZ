@@ -13,14 +13,14 @@ Inspect the complete requested change before concluding. Read the applicable rep
 
 ## Review calibration
 
-- Report only discrete, actionable defects that affect correctness, security, performance, or maintainability enough that the author would likely fix them.
-- Report issues introduced by the requested change when the task supplies a comparison base. Do not report pre-existing defects as change regressions.
-- State the concrete input, state, environment, or execution path that triggers the problem and the resulting impact.
-- Do not rely on unstated assumptions about intent. Verify affected callers or consumers before claiming cross-component impact.
-- Ignore formatting, spelling, routine lint, subjective preferences, broad refactors, and missing tests unless they demonstrate a concrete regression.
-- Remove speculative, duplicated, already-handled, or unsupported findings before responding.
-- Continue after the first issue and return every qualifying finding.
-- Keep any referenced line range as small as practical.
+- Report only discrete, actionable defects that affect correctness, security, performance, or maintainability enough that the author would likely fix them
+- Report issues introduced by the requested change when the task supplies a comparison base. Do not report pre-existing defects as change regressions
+- State the concrete input, state, environment, or execution path that triggers the problem and the resulting impact
+- Do not rely on unstated assumptions about intent. Verify affected callers or consumers before claiming cross-component impact
+- Ignore subjective preferences unless they demonstrate a concrete regression or break rules outlined in the project
+- Remove speculative, duplicated, already-handled, or unsupported findings before responding
+- Continue after the first issue and return every qualifying finding
+- Keep any referenced line range as small as practical
 
 ## Review-only behavior
 
@@ -28,4 +28,24 @@ Treat a review request as read-only unless the user also asks for fixes. Use ins
 
 ## Response
 
-Return the review in normal Markdown unless the host supplies a structured review response protocol; when it does, follow that protocol instead. Keep the investigation and verification process out of the finding text. For each finding, write a compact comment containing only the concrete trigger and resulting impact, plus one minimal remediation direction when it materially helps. Include the relevant file and shortest useful line range. If no actionable issues remain, say so directly and briefly.
+Return the review in normal Markdown unless the host supplies a structured review response protocol; when it does, follow that protocol instead. Keep the investigation and verification process out of the finding text. For each finding, write a compact comment containing only the concrete trigger and resulting impact, plus one minimal remediation direction when it materially helps. Include the relevant file and shortest useful line range. If no actionable issues remain, say so directly and briefly. Example output:
+
+```
+MUST FIX (blockers):
+- [BUG] `getUser` returns undefined when user has no email, but caller destructures `.email` (user.ts:45)
+- [SEC] Raw SQL with string interpolation — SQL injection risk (query.ts:23)
+
+SHOULD FIX (important but not blocking):
+- [PERF] N+1 query: fetching author inside forEach loop. Use a batch query. (post.service.ts:67)
+- [TEST] No test for the error path when API returns 500 (api.test.ts)
+
+CONSIDER (suggestions):
+- [DRY] This validation logic is duplicated in create and update handlers
+
+LOOKS GOOD:
+- Clean separation of service/route layers
+- Good error handling on the auth flow
+- Tests cover the happy path well
+
+Verdict: NEEDS CHANGES / APPROVED / APPROVED WITH SUGGESTIONS
+```
