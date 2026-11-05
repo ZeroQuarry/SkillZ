@@ -20,6 +20,7 @@ Inspect the complete requested surface before concluding — rendered output or 
 - Report issues introduced by the change under review when a comparison base (a diff, a before-screenshot) is supplied. Do not report pre-existing conditions as regressions.
 - Ignore code style and implementation details unless they produce a visible defect.
 - Continue after the first issue and return every qualifying finding. Keep references small: file and line, or element and region.
+- Each finding can be a blocker, or a P0-P3.
 
 ## What to look for
 
